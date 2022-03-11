@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <title>WebRTC demo: stalker</title>
+    <style>
+        #media {
+            max-width: 1024px;
+            max-height: 800px;
+        }
+
+        #start {
+            padding: 0;
+            border-radius: 0;
+            display: inline;
+            margin: 0 0 0 20px;
+            vertical-align: super;
+
+            --wide: 0.5rem;
+            border: 0;
+            background: transparent;
+            box-sizing: border-box;
+            width: 0;
+            height: calc(var(--wide) * 2);
+            border-color: transparent transparent transparent var(--background-color);
+            transition: 100ms all ease;
+            cursor: pointer;
+            border-style: solid;
+            border-width: var(--wide) 0 var(--wide) calc(var(--wide)*60/37);
+        }
+
+        #start[isplaying] {
+            vertical-align: baseline;
+            border-style: double;
+            border-width: 0px 0 0px calc(var(--wide)*60/37);
+            border-color: transparent transparent transparent var(--del-color);
+        }
+
+        /* top nav bar */
+        body>nav {
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 99;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            backdrop-filter: saturate(180%) blur(20px);
+            /*background-color: var(--contrast);*/
+            box-shadow: 0 1px 0 var(--secondary);
+        }
+
+        body>main {
+            padding-top: calc(var(--block-spacing-vertical) + 3.5rem);
+        }
+
+        .switcher {
+            width: auto;
+            margin-bottom: 0;
+            padding: 0.2rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-box-shadow);
+            line-height: 0.5;
+            text-align: right;
+        }
+
+        .switcher::after {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: .15rem solid currentColor;
+            border-radius: 50%;
+            background: linear-gradient(to right, currentColor 0, currentColor 50%, transparent 50%);
+            content: "";
+            vertical-align: bottom;
+            transition: transform var(--transition);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>WebRTC Demo: Stalker</strong></li>
+        </ul>
+        <ul>
+            <li><button class="switcher contrast" onclick="toggleTheme()"></button></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <label for="media-source"><input id="media-source" checked="checked" type="checkbox" role="switch" />
+            Source media</label>
+        <details open>
+            <summary>Media
+                <button id="start" onclick="playStop(this)"></button>
+            </summary>
+            <article id="media" style="display: none">
+                <audio id="audio" autoplay="true"></audio>
+                <video id="video" autoplay="true" playsinline autoplay controls style="max-height:1080"></video>
+                <div>video resolution: <span id="video-size"></span></div>
+            </article>
+        </details>
+        <details open>
+            <summary>Data channel</summary>
+            <pre id="data-channel" style="height: 200px;"></pre>
+        </details>
+        <details>
+            <summary>State</summary>
+            <div class="grid">
+                <div>
+                    <label>ICE gathering state</label> <code id="ice-gathering-state"></code>
+                </div>
+                <div>
+                    <label>ICE connection state</label> <code id="ice-connection-state"></code>
+                </div>
+                <div>
+                    <label>Signaling state</label> <code id="signaling-state"></code>
+                </div>
+            </div>
+        </details>
+        <details>
+            <summary>SDP</summary>
+            <article>
+                <header>Offer</header>
+                <pre id="offer-sdp"></pre>
+            </article>
+            <article>
+                <header>Answer</header>
+                <pre id="answer-sdp"></pre>
+            </article>
+        </details>
+    </main>
+    <script src="stalker.js"></script>
+</body>
+
+</html>
